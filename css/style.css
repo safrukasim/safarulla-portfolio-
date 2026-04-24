@@ -246,7 +246,7 @@ body {
   color: var(--text-soft);
   letter-spacing: 0.2px;
   padding: 0 18px;
-  margin-bottom: 4px;
+  margin-bottom: -28px;
   display: block;
 }
 
