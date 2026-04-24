@@ -430,8 +430,8 @@ a.project-name { display: block; }
   font-weight: 500;
   color: var(--text-secondary);
   white-space: nowrap;
-  opacity: 0;
-  transform: translate(-10px, 6px) rotate(-4deg);
+  opacity: 0.75;
+  transform: translate(0, 0) rotate(-4deg);
   transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
   pointer-events: none;
   z-index: 3;
@@ -2042,5 +2042,5 @@ body.loaded .right-panel:not(.expanded) .deco-camera:hover {
 }
 body.loaded .right-panel:not(.expanded) .deco-camera:hover ~ .camera-hint {
   opacity: 1;
-  transform: translate(0, 0) rotate(-4deg);
+  transform: translate(0, -2px) rotate(-4deg);
 }
