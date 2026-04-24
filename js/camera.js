@@ -64,6 +64,18 @@ async function initCamera() {
   const retryBtn = document.getElementById('cameraRetry');
   const errText = document.getElementById('cameraErrorText');
 
+  // Bind retry once (independent of whether init succeeds)
+  if (retryBtn && !retryBtn.dataset.bound) {
+    retryBtn.addEventListener('click', initCamera);
+    retryBtn.dataset.bound = '1';
+  }
+
+  // Stop any existing stream before re-initializing
+  if (video.srcObject) {
+    try { video.srcObject.getTracks().forEach(t => t.stop()); } catch (_) {}
+    video.srcObject = null;
+  }
+
   try {
     if (!navigator.mediaDevices?.getUserMedia) {
       throw new Error('NotSupported');
@@ -74,6 +86,7 @@ async function initCamera() {
     });
     video.srcObject = stream;
     await video.play().catch(() => {});
+    // Success — hide error and enable capture
     cameraError.hidden = true;
     video.hidden = false;
     snapBtn.disabled = false;
@@ -81,7 +94,7 @@ async function initCamera() {
     console.error('Camera error:', err);
     if (errText) {
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        errText.textContent = 'Camera access blocked. Check browser permissions.';
+        errText.textContent = 'Camera access blocked. Allow it in browser settings, then tap below.';
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
         errText.textContent = 'No camera found on this device.';
       } else if (err.name === 'NotReadableError') {
@@ -96,11 +109,15 @@ async function initCamera() {
     video.hidden = true;
     snapBtn.disabled = true;
   }
+}
 
-  if (retryBtn && !retryBtn.dataset.bound) {
-    retryBtn.addEventListener('click', initCamera);
-    retryBtn.dataset.bound = '1';
-  }
+// Watch for permission changes (Chrome, Edge, most modern browsers)
+if (navigator.permissions?.query) {
+  navigator.permissions.query({ name: 'camera' }).then(status => {
+    status.onchange = () => {
+      if (status.state === 'granted' && video.hidden) initCamera();
+    };
+  }).catch(() => {});
 }
 
 const waitMs = ms => new Promise(r => setTimeout(r, ms));
