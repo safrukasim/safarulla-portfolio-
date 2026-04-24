@@ -66,7 +66,12 @@ async function initCamera() {
 
   // Bind retry once (independent of whether init succeeds)
   if (retryBtn && !retryBtn.dataset.bound) {
-    retryBtn.addEventListener('click', initCamera);
+    retryBtn.addEventListener('click', () => {
+      // Optimistically hide the error and show the video while we re-attempt
+      cameraError.hidden = true;
+      video.hidden = false;
+      initCamera();
+    });
     retryBtn.dataset.bound = '1';
   }
 
@@ -114,8 +119,16 @@ async function initCamera() {
 // Watch for permission changes (Chrome, Edge, most modern browsers)
 if (navigator.permissions?.query) {
   navigator.permissions.query({ name: 'camera' }).then(status => {
+    // If already granted at page load, make sure no error lingers
+    if (status.state === 'granted' && !cameraError.hidden) {
+      cameraError.hidden = true;
+    }
     status.onchange = () => {
-      if (status.state === 'granted' && video.hidden) initCamera();
+      if (status.state === 'granted') {
+        cameraError.hidden = true;
+        video.hidden = false;
+        if (!video.srcObject) initCamera();
+      }
     };
   }).catch(() => {});
 }
