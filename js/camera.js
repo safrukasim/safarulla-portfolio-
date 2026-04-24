@@ -38,7 +38,8 @@ const FILTER_CSS = {
   '90s':     'saturate(0.7) contrast(0.92) brightness(1.1) hue-rotate(-5deg)',
   polaroid:  'sepia(0.18) saturate(0.85) contrast(1.05) brightness(1.05)',
   dreamy:    'contrast(0.9) saturate(1.1) brightness(1.15) blur(0.4px)',
-  cinematic: 'contrast(1.2) saturate(1.3) hue-rotate(-8deg) brightness(0.95)'
+  cinematic: 'contrast(1.2) saturate(1.3) hue-rotate(-8deg) brightness(0.95)',
+  digicam:   'contrast(0.92) saturate(0.8) brightness(1.05) blur(0.7px) hue-rotate(-3deg)'
 };
 
 let currentFilter = 'none';
