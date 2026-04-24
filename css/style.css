@@ -430,11 +430,16 @@ a.project-name { display: block; }
   font-weight: 500;
   color: var(--text-secondary);
   white-space: nowrap;
-  opacity: 0.75;
-  transform: translate(0, 0) rotate(-4deg);
-  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  opacity: 0;
+  transform: translate(0, 6px) rotate(-4deg);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
   pointer-events: none;
   z-index: 3;
+}
+
+body.loaded .right-panel:not(.expanded) .camera-hint {
+  opacity: 0.75;
+  transform: translate(0, 0) rotate(-4deg);
 }
 
 /* Base transitions for return (close) — staggered: photo out → backframe/decoratives in → iMac in */
