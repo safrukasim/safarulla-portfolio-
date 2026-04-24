@@ -1887,9 +1887,12 @@ html.skip-intro .project-side {
     max-width: 520px;
   }
 
-  /* Nav simpler on mobile */
+  /* Nav becomes a sticky header on mobile */
   .nav {
-    padding: 24px 24px 0;
+    padding: 16px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    pointer-events: auto;
   }
 
   /* On mobile, More click hides iMac + project list (like desktop expand) */
