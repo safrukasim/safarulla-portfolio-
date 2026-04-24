@@ -238,6 +238,24 @@ body {
   transform: rotate(180deg);
 }
 
+/* Project list label */
+.project-list-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-soft);
+  letter-spacing: 0.2px;
+  padding: 0 18px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.left-panel.expanded .project-list-label {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
 /* Project List */
 .project-list {
   display: flex;
