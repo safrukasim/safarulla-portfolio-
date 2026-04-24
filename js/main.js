@@ -1,6 +1,8 @@
 // Click camera → zoom camera into its photo-booth position, fade rest out
 document.querySelector('.deco-camera')?.addEventListener('click', (e) => {
   if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+  // Skip zoom transition on mobile
+  if (window.innerWidth < 900) { window.location.href = 'camera.html'; return; }
   const cam = e.currentTarget;
   const rect = cam.getBoundingClientRect();
 
@@ -165,17 +167,27 @@ document.querySelectorAll('.tagline-extra, .expanded-contact .contact-label, .ex
 // - Only the thumbnail image scales to its project-page position
 // - Everything else on home fades out
 // - Project page fades in with the thumbnail already in place
+const CASE_STUDY_MAP = {
+  'project-joystick.html': 'images/joystick-learning.webp',
+  'project-landing.html': 'images/custom-landing-page.webp',
+  'project-919tuned.html': 'images/919-tuned.webp',
+  'project-marketing.html': 'images/marketing-design-system.webp'
+};
+
 document.querySelectorAll('.project-item:not(.coming-soon) a.project-card').forEach(card => {
   card.addEventListener('click', (e) => {
     const href = card.getAttribute('href');
     if (!href || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    // Skip the zoom transition on mobile — let the link navigate normally
+    if (window.innerWidth < 900) return;
     const activeImg = document.querySelector('.preview.active img');
     if (!activeImg) return;
     e.preventDefault();
 
     const rect = activeImg.getBoundingClientRect();
+    const caseStudySrc = CASE_STUDY_MAP[href] || activeImg.currentSrc || activeImg.src;
 
-    // Thumbnail zoom overlay (no bezel/frame, just the image)
+    // Zoom overlay uses the CASE STUDY image (same as destination page) for seamless landing
     const overlay = document.createElement('div');
     overlay.className = 'zoom-overlay';
     overlay.style.cssText = `
@@ -184,7 +196,7 @@ document.querySelectorAll('.project-item:not(.coming-soon) a.project-card').forE
       top: ${rect.top}px;
       width: ${rect.width}px;
       height: ${rect.height}px;
-      background: url('${activeImg.currentSrc || activeImg.src}') center/cover no-repeat;
+      background: url('${caseStudySrc}') top center / 100% auto no-repeat;
       z-index: 9999;
       transition: left 0.75s cubic-bezier(0.76, 0, 0.24, 1),
                   top 0.75s cubic-bezier(0.76, 0, 0.24, 1),
