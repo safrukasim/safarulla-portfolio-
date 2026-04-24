@@ -235,7 +235,7 @@ initCamera();
 
 // Shared capture counter — free CORS-enabled counter
 const COUNTER_NS = 'safarulla-portfolio';
-const COUNTER_KEY = 'captures';
+const COUNTER_KEY = 'captures-v2';
 const counterEl = document.getElementById('captureCounter');
 
 function renderCount(n) {
