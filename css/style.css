@@ -1440,6 +1440,7 @@ html.skip-intro .project-side {
   text-align: center;
   padding: 24px;
 }
+.camera-error[hidden] { display: none !important; }
 .camera-error p { margin: 0; max-width: 260px; line-height: 1.4; }
 .camera-error-retry {
   padding: 8px 16px;
