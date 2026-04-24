@@ -170,7 +170,7 @@ document.querySelectorAll('.project-item:not(.coming-soon) a.project-card').forE
     const href = card.getAttribute('href');
     if (!href || e.metaKey || e.ctrlKey || e.shiftKey) return;
     const activeImg = document.querySelector('.preview.active img');
-    if (!activeImg || !activeImg.complete) return;
+    if (!activeImg) return;
     e.preventDefault();
 
     const rect = activeImg.getBoundingClientRect();
