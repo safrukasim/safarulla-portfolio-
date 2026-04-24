@@ -61,16 +61,45 @@ filterPicker.addEventListener('click', (e) => {
 });
 
 async function initCamera() {
+  const retryBtn = document.getElementById('cameraRetry');
+  const errText = document.getElementById('cameraErrorText');
+
   try {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error('NotSupported');
+    }
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
       audio: false
     });
     video.srcObject = stream;
+    await video.play().catch(() => {});
+    cameraError.hidden = true;
+    video.hidden = false;
+    snapBtn.disabled = false;
   } catch (err) {
+    console.error('Camera error:', err);
+    if (errText) {
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        errText.textContent = 'Camera access blocked. Check browser permissions.';
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        errText.textContent = 'No camera found on this device.';
+      } else if (err.name === 'NotReadableError') {
+        errText.textContent = 'Camera is in use by another app.';
+      } else if (err.message === 'NotSupported') {
+        errText.textContent = 'Browser does not support camera.';
+      } else {
+        errText.textContent = 'Could not access camera — tap to retry.';
+      }
+    }
     cameraError.hidden = false;
     video.hidden = true;
     snapBtn.disabled = true;
+  }
+
+  if (retryBtn && !retryBtn.dataset.bound) {
+    retryBtn.addEventListener('click', initCamera);
+    retryBtn.dataset.bound = '1';
   }
 }
 
