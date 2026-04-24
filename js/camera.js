@@ -268,7 +268,7 @@ const COUNTER_KEY = 'captures-v2';
 const counterEl = document.getElementById('captureCounter');
 
 function renderCount(n) {
-  if (typeof n !== 'number' || isNaN(n)) return;
+  if (typeof n !== 'number' || isNaN(n)) n = 0;
   counterEl.innerHTML = `<span class="count-num">${n.toLocaleString()}</span> ${n === 1 ? 'polaroid' : 'polaroids'} printed`;
   counterEl.classList.add('loaded');
 }
@@ -277,8 +277,15 @@ async function loadCount() {
   try {
     const res = await fetch(`https://abacus.jasoncameron.dev/get/${COUNTER_NS}/${COUNTER_KEY}`);
     const data = await res.json();
-    if (data && typeof data.value === 'number') renderCount(data.value);
-  } catch (_) { /* silent */ }
+    if (data && typeof data.value === 'number') {
+      renderCount(data.value);
+    } else {
+      // Key not yet created — show 0
+      renderCount(0);
+    }
+  } catch (_) {
+    renderCount(0);
+  }
 }
 
 async function incrementCount() {
