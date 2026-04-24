@@ -1855,11 +1855,17 @@ html.skip-intro .project-side {
     transform: none !important;
   }
 
-  .project-list {
+  .project-list-label {
     order: 3;
+    padding: 8px 32px 0;
+    margin-bottom: 0;
+  }
+
+  .project-list {
+    order: 4;
     width: auto;
     max-height: none;
-    padding: 16px 16px 80px;
+    padding: 8px 16px 80px;
   }
 
   /* Hide decoratives on mobile */
