@@ -238,7 +238,6 @@ async function capture() {
   }, 250);
 
   snapBtn.hidden = true;
-  incrementCount();
 }
 
 async function savePolaroid() {
@@ -293,38 +292,3 @@ retakeBtn.addEventListener('click', retake);
 
 initCamera();
 
-// Shared capture counter — free CORS-enabled counter
-const COUNTER_NS = 'safarulla-portfolio';
-const COUNTER_KEY = 'captures-v3';
-const counterEl = document.getElementById('captureCounter');
-
-function renderCount(n) {
-  if (typeof n !== 'number' || isNaN(n)) n = 0;
-  counterEl.innerHTML = `<span class="count-num">${n.toLocaleString()}</span> ${n === 1 ? 'polaroid' : 'polaroids'} printed`;
-  counterEl.classList.add('loaded');
-}
-
-async function loadCount() {
-  try {
-    const res = await fetch(`https://abacus.jasoncameron.dev/get/${COUNTER_NS}/${COUNTER_KEY}`);
-    const data = await res.json();
-    if (data && typeof data.value === 'number') {
-      renderCount(data.value);
-    } else {
-      // Key not yet created — show 0
-      renderCount(0);
-    }
-  } catch (_) {
-    renderCount(0);
-  }
-}
-
-async function incrementCount() {
-  try {
-    const res = await fetch(`https://abacus.jasoncameron.dev/hit/${COUNTER_NS}/${COUNTER_KEY}`);
-    const data = await res.json();
-    if (data && typeof data.value === 'number') renderCount(data.value);
-  } catch (_) { /* silent */ }
-}
-
-loadCount();
