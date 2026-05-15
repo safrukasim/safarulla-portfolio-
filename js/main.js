@@ -66,16 +66,13 @@ if (sessionStorage.getItem('fromZoomTransition') === '1') {
   sessionStorage.removeItem('fromZoomTransition');
 }
 
-// Full screen overlay on project pages — image fills viewport width with a close X
-document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
-  const img = document.querySelector('.project-single-img');
-  if (!img) return;
-
+// Fullscreen image overlay helper
+function openFullscreenOverlay(imgSrc) {
   const overlay = document.createElement('div');
   overlay.className = 'fullscreen-overlay';
   overlay.innerHTML = `
     <div class="fullscreen-scroll">
-      <img src="${img.src}" alt="" class="fullscreen-img">
+      <img src="${imgSrc}" alt="" class="fullscreen-img">
     </div>
     <button type="button" class="fullscreen-close" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -96,6 +93,12 @@ document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
   const onKey = (e) => { if (e.key === 'Escape') close(); };
   overlay.querySelector('.fullscreen-close').addEventListener('click', close);
   document.addEventListener('keydown', onKey);
+}
+
+// Full screen button on project pages
+document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
+  const img = document.querySelector('.project-single-img');
+  if (img) openFullscreenOverlay(img.src);
 });
 
 // Inject floating close button on mobile project pages
@@ -178,16 +181,16 @@ document.querySelectorAll('.project-item:not(.coming-soon) a.project-card').forE
   card.addEventListener('click', (e) => {
     const href = card.getAttribute('href');
     if (!href || e.metaKey || e.ctrlKey || e.shiftKey) return;
-    // Skip the zoom transition on mobile — let the link navigate normally
-    if (window.innerWidth < 900) return;
+    const caseStudySrc = CASE_STUDY_MAP[href];
+    if (!caseStudySrc) return;
+    e.preventDefault();
+    openFullscreenOverlay(caseStudySrc);
+    return;
+
+    /* Old zoom-to-page transition (kept here for reference, disabled)
     const activeImg = document.querySelector('.preview.active img');
     if (!activeImg) return;
-    e.preventDefault();
-
     const rect = activeImg.getBoundingClientRect();
-    const caseStudySrc = CASE_STUDY_MAP[href] || activeImg.currentSrc || activeImg.src;
-
-    // Zoom overlay uses the CASE STUDY image (same as destination page) for seamless landing
     const overlay = document.createElement('div');
     overlay.className = 'zoom-overlay';
     overlay.style.cssText = `
@@ -235,5 +238,6 @@ document.querySelectorAll('.project-item:not(.coming-soon) a.project-card').forE
 
     sessionStorage.setItem('fromZoomTransition', '1');
     setTimeout(() => { window.location.href = href; }, 750);
+    */
   });
 });
